@@ -1,8 +1,8 @@
-CREATE DATABASE CS425Project;
-USE CS425Project;
+CREATE DATABASE database_name;
+USE database_name;
 
-CREATE USER 'Chayy'@'localhost' IDENTIFIED BY '370HSSv#';
-GRANT ALL PRIVILEGES ON CS425Project.* TO 'Chayy'@'localhost';
+CREATE USER 'username'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON database_name.* TO 'username'@'localhost';
 FLUSH PRIVILEGES;
 
 CREATE TABLE airport (
@@ -13,6 +13,7 @@ CREATE TABLE airport (
  timezone timestamp,
  primary key (AirportID) 
 );
+
 CREATE TABLE Airport_coordinates (
  AirportID varchar(25) not null,
  latitude decimal(10, 8) NOT NULL,
@@ -20,6 +21,7 @@ CREATE TABLE Airport_coordinates (
  primary key (AirportID),
  foreign key (AirportID) references Airport(AirportID)
 );
+
 CREATE TABLE Airlines (
  AirlineID varchar(25),
  AirlineName varchar(50),
@@ -27,6 +29,7 @@ CREATE TABLE Airlines (
  Manufacturer varchar(20),
  primary key (AirlineID)
 );
+
 CREATE TABLE flights (
  FlightID varchar(25),
  DepartureAirportID varchar(25),
@@ -45,6 +48,7 @@ CREATE TABLE flights (
  FOREIGN KEY (ArrivalAirportID) REFERENCES Airport(AirportID),
  Primary key(FlightID)
 );
+
 CREATE TABLE passenger (
  PassengerID varchar(25) not null,
  PassportID varchar(15),
@@ -61,12 +65,14 @@ CREATE TABLE passenger (
  UNIQUE KEY Address (street_number, street_name, apartment_number, city, state, zipcode),
  primary key (PassengerID)
 );
+
 CREATE TABLE Passenger_phone (
  PassengerID varchar(25) not null,
  Phonenumber char(10),
  primary key (PassengerID, Phonenumber),
  foreign key (PassengerID) references passenger(PassengerID)
 );
+
 CREATE TABLE Bookings (
  BookingID varchar(25) not null,
  Confirmationcode char(20),
@@ -81,6 +87,7 @@ CREATE TABLE Bookings (
  FOREIGN KEY (FlightID) REFERENCES flights(FlightID),
  foreign key (PassengerID) references passenger(PassengerID)
 );
+
 CREATE TABLE Passenger_preferences (
  PreferenceID varchar(30),
  PassengerID varchar(25),
@@ -91,6 +98,7 @@ CREATE TABLE Passenger_preferences (
  primary key (PreferenceID),
  FOREIGN KEY (PassengerID) REFERENCES passenger(PassengerID)
 );
+
 CREATE TABLE Crew_members (
  CrewID varchar(25),
  EmployeeID varchar(25),
@@ -100,6 +108,7 @@ CREATE TABLE Crew_members (
  UNIQUE KEY CrewFullName (CrewFirstname, CrewSurname),
  Primary key (CrewID)
 );
+
 CREATE TABLE Crew_assigned (
  FlightID varchar(25),
  CrewID varchar(25),
@@ -109,11 +118,13 @@ CREATE TABLE Crew_assigned (
  foreign key (FlightID) references flights(FlightID),
  foreign key (CrewID) references Crew_members(CrewID)
 );
+
 CREATE TABLE Crew_role (
  CrewRoleID varchar(25),
  CrewRoleName varchar(50),
  primary key (CrewRoleID)
 );
+
 CREATE TABLE CrewDesignated (
  CrewRoleID varchar(25),
  CrewID varchar(25),
@@ -121,6 +132,7 @@ CREATE TABLE CrewDesignated (
  foreign key (CrewRoleID) references Crew_role(CrewRoleID),
  foreign key (CrewID) references Crew_members(CrewID)
 );
+
 INSERT INTO Airport (AirportID, AirportName, city, country, timezone)
 VALUES 
  ('JFK', 'JFK International Airport', 'New York', 'USA', '2024-06-24 08:00:00'),
@@ -156,6 +168,7 @@ VALUES
  ('ATL', 33.6367, -84.4281),
  ('ORD', 41.9742, -87.9073),
  ('MIA', 25.7933, -80.2906);
+
 INSERT INTO Airlines (AirlineID, AirlineName, Country, Manufacturer)
 VALUES 
  ('AA', 'American Airlines', 'USA', 'Boeing'),
@@ -356,6 +369,7 @@ VALUES
  ('B078', 'XYZ234', '2024-09-08', 'Paid', 'A078', '700', 'First Class', 'F083', 'P003'),
  ('B079', 'ABC567', '2024-09-09', 'Paid', 'A079', '450', 'Economy', 'F069', 'P004'),
  ('B080', 'DEF890', '2024-09-09', 'Pending', 'A080', '650', 'Business', 'F065', 'P005');
+
 INSERT INTO Passenger_preferences (PreferenceID, PassengerID, seatPreference, MealPreference, SpecialAssistance, Entertainment)
 VALUES
  ('PP001', 'P001', 'Aisle seat', 'Vegetarian', 'Wheelchair', 'Movies'),
@@ -383,6 +397,7 @@ VALUES
  ('PP023', 'P012', 'Aisle seat', 'Regular', 'None', 'Movies'),
  ('PP024', 'P012', 'Middle seat', 'Vegetarian', 'None', 'Music'),
  ('PP025', 'P013', 'Aisle seat', 'Regular', 'None', 'Movies');
+
 INSERT INTO Crew_members (CrewID, EmployeeID, License, CrewFirstname, CrewSurname)
 VALUES
  ('CM001', 'E001', 'PL001', 'John', 'Smith'),
@@ -400,6 +415,7 @@ VALUES
  ('CM013', 'E013', 'FAC013', 'Ethan', 'Wilson'),
  ('CM014', 'E014', 'FAC014', 'Mia', 'Anderson'),
  ('CM015', 'E015', 'FAC015', 'Amelia', 'Taylor');
+
 INSERT INTO Crew_assigned (FlightID, CrewID, shift, DutyDate)
 VALUES
  ('F055', 'CM001', 'Morning', '2024-08-31'),
@@ -469,6 +485,7 @@ VALUES
  ('CR003', 'Flight Attendant'),
  ('CR004', 'Lead Flight Attendant'),
  ('CR005', 'Ground Crew');
+
 INSERT INTO CrewDesignated (CrewRoleID, CrewID)
 VALUES
  ('CR001', 'CM001'), -- John Smith
@@ -497,18 +514,22 @@ VALUES
  
 INSERT INTO Airport (AirportID, AirportName, city, country, timezone)
 VALUES ('YYZ', 'Toronto Pearson International Airport', 'Toronto', 'Canada', '2024-06-24 07:00:00');
+
 SELECT * FROM Bookings where Price>700;
 UPDATE Airport
 SET city = 'London Heathrow'
 WHERE AirportID = 'LHR';
+
 DELETE FROM Airport
 WHERE AirportID = 'YYZ';
+
 CREATE INDEX idx_booking_passenger ON Bookings(PassengerID);
 CREATE INDEX idx_booking_flight_date ON Bookings(FlightID, BookingDate);
 CREATE VIEW View_BookingCounts AS
 SELECT FlightID, COUNT(*) AS NumBookings
 FROM Bookings
 GROUP BY FlightID;
+
 DROP TEMPORARY TABLE IF EXISTS BookingRecords;
 CREATE TEMPORARY TABLE BookingRecords (
  BookingID varchar(25),
@@ -516,10 +537,12 @@ CREATE TEMPORARY TABLE BookingRecords (
  FlightID varchar(25),
  BookingDate DATE
 );
+
 INSERT INTO BookingRecords (BookingID, PassengerID, FlightID, BookingDate)
 SELECT BookingID, PassengerID, FlightID, BookingDate
 FROM Bookings;
 DELIMITER //
+ 
 CREATE TRIGGER UpdatePassengerMiles
 AFTER INSERT ON Bookings
 FOR EACH ROW
@@ -536,6 +559,7 @@ BEGIN
 END //
 DELIMITER ;
 DELIMITER //
+ 
 CREATE PROCEDURE GetPassengerBookings(IN p_PassengerID VARCHAR(25))
 BEGIN
  SELECT B.BookingID, B.Confirmationcode, B.Bookingdate, B.PaymentStatus, B.seatnumber, B.Price, B.TicketType,
@@ -547,6 +571,7 @@ BEGIN
 END //
 DELIMITER ;
 DELIMITER //
+ 
 CREATE FUNCTION CalculateFlightDuration (p_departure_time DATETIME, p_arrival_time DATETIME)
 RETURNS TIME
 DETERMINISTIC
